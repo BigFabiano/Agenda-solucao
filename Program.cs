@@ -154,7 +154,26 @@ namespace Agenda
         {
             Console.WriteLine("- Consultar contatos por Nome:");
 
-            // Continue daqui
+            Console.WriteLine("Nome: ");
+            string nomeABuscar = Console.ReadLine().Trim(); // Trim tira os espaços
+
+            using(var agenda = new agendaContext())
+            {
+                var contatosFiltrados = agenda.Contatos
+                .Where(c => c.Nome.Contains(nomeABuscar));//vai fazer um where e o contains é como se fosse o like no mysql
+                int qtdEncontrada = agenda.Contatos.Count();  //Vai contar qtois registros eu tenho
+                if (qtdEncontrada == 0)
+                {
+                     Console.WriteLine($"Nenhum contato encontrado contendo \"{nomeABuscar}\" no nome.");
+                     return;
+                }
+                Console.WriteLine($"{qtdEncontrada} contato(s) cadastrado(s)");
+
+               foreach(var contato in contatosFiltrados)
+               {
+                   Console.WriteLine($"{contato.Id}: {contato.Nome}, {contato.Fone}, {contato.Estrelas} estrelas.");
+               }
+            }  
         }
 
         static void IncluirContato()
