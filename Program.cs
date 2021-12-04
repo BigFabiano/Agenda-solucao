@@ -121,7 +121,33 @@ namespace Agenda
         {
             Console.WriteLine("- Consultar contatos por Código:");
 
-            // Continue daqui
+            Console.WriteLine("Código: ");
+            string codigoDigitado = Console.ReadLine();
+
+            int codigoABuscar;
+            bool ehNumero = Int32.TryParse(codigoDigitado, out codigoABuscar);
+
+            if (!ehNumero)
+            {
+                Console.WriteLine("Código Inválido. ");
+                return;
+            }
+            
+            using(var agenda = new agendaContext())
+            {
+               var contato = agenda.Contatos
+               .SingleOrDefault(c => c.Id == codigoABuscar); // busca no banco por código se nao houver nada ele retorna null
+
+               if (contato is null)
+               {
+                   Console.WriteLine($"Nenhum contato com código {codigoABuscar} encontrado.");
+               }
+               else
+               {
+                   Console.WriteLine($"{contato.Id}: {contato.Nome}, {contato.Fone}, {contato.Estrelas}");
+               }
+
+            }
         }
 
         static void ConsultarContatosPorNome()
