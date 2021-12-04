@@ -81,6 +81,7 @@ namespace Agenda
                      return;
                 }
                 Console.WriteLine($"{qtdDeContatos} contato(s) cadastrado(s)");
+
                foreach(var contato in agenda.Contatos)
                {
                    Console.WriteLine($"{contato.Id}: {contato.Nome}, {contato.Fone}, {contato.Estrelas} estrelas.");
@@ -91,8 +92,29 @@ namespace Agenda
         static void Top5Contatos()
         {
             Console.WriteLine("- Top 5 contatos:");
+            using(var agenda = new agendaContext())
+            {
+                int qtdDeContatos = agenda.Contatos.Count();  //Vai contar qtois registros eu tenho
+                if (qtdDeContatos == 0)
+                {
+                     Console.WriteLine("Não há nenhum cadastro");
+                     return;
+                }
+                Console.WriteLine($"{qtdDeContatos} contato(s) cadastrado(s)");
 
-            // Continue daqui
+                var top5Contatos = agenda.Contatos
+                .OrderByDescending(c => c.Estrelas)
+                .Take(5); //Ordena os contatos em ordem decrescente, a função take diz pegue 5 registros
+
+
+                int posicao = 0;
+                foreach(var contato in top5Contatos)
+               {
+                   posicao += 1;
+                   Console.WriteLine($"#{posicao} = {contato.Id}: {contato.Nome}, {contato.Fone}, {contato.Estrelas} estrelas.");
+               }
+            }
+            
         }
 
         static void ConsultarContatosPorCodigo()
